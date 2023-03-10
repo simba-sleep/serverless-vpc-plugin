@@ -72,7 +72,7 @@ function buildInternetGateway() {
  * @param {Object} prefixLists AWS-owned managed prefix lists in the region
  * @return {Object}
  */
-function buildAppSecurityGroup(prefixLists = null) {
+function buildAppSecurityGroup(prefixLists = null, allowSSH = false) {
   const egress = [
     {
       Description: 'permit HTTPS outbound',
@@ -82,6 +82,15 @@ function buildAppSecurityGroup(prefixLists = null) {
       CidrIp: '0.0.0.0/0',
     },
   ];
+  if (allowSSH) {
+    egress.push({
+      Description: 'permit SSH outbound',
+      IpProtocol: 'tcp',
+      FromPort: 22,
+      ToPort: 22,
+      CidrIp: '0.0.0.0/0',
+    });
+  }
   if (prefixLists) {
     egress.push({
       DestinationPrefixListId: prefixLists.s3,

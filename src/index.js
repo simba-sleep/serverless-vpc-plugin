@@ -48,6 +48,7 @@ class ServerlessVpcPlugin {
     let bastionHostKeyName = null;
     let exportOutputs = false;
     let subnetGroups = VALID_SUBNET_GROUPS;
+    let allowSSH = false;
 
     const { vpcConfig } = this.serverless.service.custom;
 
@@ -118,6 +119,10 @@ class ServerlessVpcPlugin {
       if ('createParameters' in vpcConfig && typeof vpcConfig.createParameters === 'boolean') {
         ({ createParameters } = vpcConfig);
       }
+
+      if ('allowSSH' in vpcConfig && typeof vpcConfig.allowSSH === 'boolean') {
+        ({ allowSSH } = vpcConfig);
+      }
     }
 
     const region = this.provider.getRegion();
@@ -186,7 +191,7 @@ class ServerlessVpcPlugin {
         createDbSubnet,
         createNatInstance: !!(createNatInstance && vpcNatAmi),
       }),
-      buildAppSecurityGroup(prefixLists),
+      buildAppSecurityGroup(prefixLists, allowSSH),
       buildDHCPOptions(region),
     );
 
