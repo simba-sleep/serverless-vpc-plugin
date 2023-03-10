@@ -36,6 +36,7 @@ Lambda functions will execute within the "Application" subnet and only be able t
 - DAX clusters (provisioned within the "DB" subnet)
 - Neptune clusters (provisioned with the "DB" subnet)
 - Internet Access (if using a `NatGateway` or a `NatInstance`)
+- SSH (port 22) (if allowed with `allowSSH`)
 
 If your Lambda functions need to [access the internet](https://docs.aws.amazon.com/lambda/latest/dg/vpc.html#vpc-internet), then you _MUST_ provision `NatGateway` resources or a NAT instance.
 
@@ -127,6 +128,9 @@ custom:
 
     # Whether to export stack outputs so it may be consumed by other stacks
     exportOutputs: false
+
+    # Whether to alow outbound access to SSH (port 22)
+    allowSSH: false
 ```
 
 ## CloudFormation Outputs
